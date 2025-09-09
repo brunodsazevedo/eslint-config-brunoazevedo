@@ -1,8 +1,9 @@
-# Rocketseat ESLint config
+# ESLint Config DotAzevedo
 
-## Whats included?
+## What's included?
 
-- Standard config base;
+- ESLint flat config;
+- TypeScript support;
 - React plugin;
 - React Hooks plugin;
 - JSX a11y plugin;
@@ -10,44 +11,34 @@
 
 ## Setup
 
-### React (with Next.js)
+### React (TypeScript)
 
 Install dependencies:
-```
-npm i -D eslint @rocketseat/eslint-config
-```
-Inside `.eslintrc.json`
-```
-{
-  "extends": [
-    "@rocketseat/eslint-config/next", 
-    "next/core-web-vitals"
-  ]
-}
+```bash
+npm i -D eslint eslint-config-brunodsazevedo
 ```
 
-### React (without Next.js)
+Create or update your `eslint.config.js`:
+```javascript
+import config from 'eslint-config-brunodsazevedo'
 
-Install dependencies:
-```
-npm i -D eslint @rocketseat/eslint-config
-```
-Inside `.eslintrc.json`
-```
-{
-  "extends": "@rocketseat/eslint-config/react"
-}
+export default config
 ```
 
-### Node.js
+Or for custom configuration:
+```javascript
+import { createReactConfig } from 'eslint-config-brunodsazevedo'
 
-Install dependencies:
+export default createReactConfig({
+  printWidth: 100,
+  singleQuote: true,
+  semi: false
+})
 ```
-npm i -D eslint @rocketseat/eslint-config
-```
-Inside `.eslintrc.json`
-```
-{
+
+### TypeScript Configuration
+
+Make sure you have a `tsconfig.json` file in your project root for proper TypeScript support.
   "extends": "@rocketseat/eslint-config/node"
 }
 ```
