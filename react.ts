@@ -11,7 +11,11 @@ import typescriptParser from '@typescript-eslint/parser'
 import prettier from 'eslint-plugin-prettier'
 // @ts-ignore - No types available for these packages
 import prettierConfig from 'eslint-config-prettier'
+// @ts-ignore - No types available for these packages
+import importPlugin from 'eslint-plugin-import'
+
 import type { Linter } from 'eslint'
+
 import type { ReactConfigOptions, GlobalsConfig } from './types'
 
 const createReactConfig = (options: ReactConfigOptions = {}): Linter.FlatConfig[] => {
@@ -27,9 +31,27 @@ const createReactConfig = (options: ReactConfigOptions = {}): Linter.FlatConfig[
   }
 
   return [
-    js.configs.recommended,
+    // Ignores should come first
     {
-      files: ['**/*.{js,jsx,ts,tsx}'],
+      ignores: [
+        '**/node_modules/**',
+        '**/dist/**', 
+        '**/build/**',
+        '**/.next/**',
+        '**/coverage/**',
+        '**/.cache/**',
+        '**/public/**',
+        '**/*.min.js'
+      ],
+    },
+    // Base JS config
+    {
+      ...js.configs.recommended,
+      files: ['**/*.{js,mjs,cjs}'],
+    },
+    // Main TypeScript/React config
+    {
+      files: ['**/*.{js,jsx,ts,tsx,mjs,cjs}'],
       languageOptions: {
         parser: typescriptParser,
         parserOptions: {
@@ -61,34 +83,45 @@ const createReactConfig = (options: ReactConfigOptions = {}): Linter.FlatConfig[
         'jsx-a11y': jsxA11y as any,
         '@typescript-eslint': typescript as any,
         prettier: prettier as any,
+        import: importPlugin as any,
       },
       rules: {
         // JavaScript recommended rules
         ...js.configs.recommended.rules,
         
-        // TypeScript recommended rules
-        ...typescript.configs.recommended.rules,
+        // TypeScript recommended rules (only for TS files)
+        ...(typescript.configs?.recommended?.rules || {}),
         
         // React recommended rules
-        ...react.configs.recommended.rules,
+        ...(react.configs?.recommended?.rules || {}),
         
         // React Hooks rules
-        ...reactHooks.configs.recommended.rules,
+        ...(reactHooks.configs?.recommended?.rules || {}),
         
         // JSX A11y recommended rules
-        ...jsxA11y.configs.recommended.rules,
+        ...(jsxA11y.configs?.recommended?.rules || {}),
         
-        // Prettier rules (should come last to override conflicting rules)
-        ...prettierConfig.rules,
-        
-        // Custom rules
-        'react/self-closing-comp': 'error',
+        // Prettier integration
         'prettier/prettier': [
           'error',
-          prettierOptions,
+          {
+            printWidth: prettierOptions.printWidth,
+            tabWidth: prettierOptions.tabWidth,
+            singleQuote: prettierOptions.singleQuote,
+            trailingComma: prettierOptions.trailingComma,
+            arrowParens: prettierOptions.arrowParens,
+            semi: prettierOptions.semi,
+            endOfLine: prettierOptions.endOfLine,
+          },
         ],
+        
+        // Custom React rules
+        'react/self-closing-comp': 'error',
         'react/react-in-jsx-scope': 'off',
         'react/prop-types': 'off',
+        'react/no-unknown-property': 'error',
+        
+        // Custom JSX A11y rules
         'jsx-a11y/alt-text': [
           'warn',
           {
@@ -101,25 +134,80 @@ const createReactConfig = (options: ReactConfigOptions = {}): Linter.FlatConfig[
         'jsx-a11y/aria-unsupported-elements': 'warn',
         'jsx-a11y/role-has-required-aria-props': 'warn',
         'jsx-a11y/role-supports-aria-props': 'warn',
-        'react/no-unknown-property': 'error',
+        
+        // TypeScript specific rules
+        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+        '@typescript-eslint/explicit-function-return-type': 'off',
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
+        '@typescript-eslint/no-explicit-any': 'warn',
+        
+        // Import rules
+        'import/order': [
+          'error',
+          {
+            groups: [
+              'builtin',
+              'external',
+              'internal',
+              'parent',
+              'sibling',
+              'index',
+            ],
+            'newlines-between': 'always',
+          },
+        ],
+        
+        // General rules
+        'no-console': 'warn',
+        'prefer-const': 'error',
+        'no-var': 'error',
       },
       settings: {
         react: {
           version: 'detect',
         },
+        'import/resolver': {
+          typescript: {
+            alwaysTryTypes: true,
+            project: './tsconfig.json',
+          },
+          node: {
+            extensions: ['.js', '.jsx', '.ts', '.tsx'],
+          },
+        },
         'import/parsers': {
-          '@typescript-eslint/parser': ['.ts', '.tsx', '.d.ts'],
+          '@typescript-eslint/parser': ['.ts', '.tsx'],
         },
       },
     },
+    // TypeScript specific configuration
     {
-      ignores: ['node_modules/**', 'dist/**', 'build/**'],
+      files: ['**/*.{ts,tsx}'],
+      languageOptions: {
+        parser: typescriptParser,
+        parserOptions: {
+          ecmaVersion: 'latest',
+          sourceType: 'module',
+          ecmaFeatures: {
+            jsx: true,
+          },
+          project: true,
+        },
+      },
+      rules: {
+        // Additional TypeScript-only rules
+        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+        '@typescript-eslint/consistent-type-imports': [
+          'error',
+          { prefer: 'type-imports' },
+        ],
+      },
     },
   ]
 }
 
 // Export default configuration
-const config: Linter.FlatConfig[] = createReactConfig()
+const config: Linter.Config[] = createReactConfig()
 export default config
 
 // Export the function for custom configurations

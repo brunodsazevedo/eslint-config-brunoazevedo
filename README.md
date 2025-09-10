@@ -7,7 +7,8 @@
 - React plugin;
 - React Hooks plugin;
 - JSX a11y plugin;
-- Prettier;
+- Import plugin;
+- Prettier integration;
 
 ## Setup
 
@@ -18,27 +19,56 @@ Install dependencies:
 npm i -D eslint eslint-config-brunodsazevedo
 ```
 
-Create or update your `eslint.config.js`:
+Create `eslint.config.js` in your project root:
 ```javascript
 import config from 'eslint-config-brunodsazevedo'
 
 export default config
 ```
 
-Or for custom configuration:
+### Custom Configuration
+
+For custom Prettier options:
 ```javascript
 import { createReactConfig } from 'eslint-config-brunodsazevedo'
 
 export default createReactConfig({
   printWidth: 100,
   singleQuote: true,
-  semi: false
+  semi: false,
+  trailingComma: 'all'
 })
 ```
 
 ### TypeScript Configuration
 
-Make sure you have a `tsconfig.json` file in your project root for proper TypeScript support.
+Make sure you have a `tsconfig.json` file in your project root:
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+### Features
+
+- ✅ Validates JavaScript, TypeScript, JSX, and TSX files
+- ✅ Excludes node_modules and build directories automatically  
+- ✅ Prettier integration with consistent formatting
+- ✅ React and React Hooks best practices
+- ✅ Accessibility rules with jsx-a11y
+- ✅ Import ordering and organization
+- ✅ TypeScript-specific rules and type checking
   "extends": "@rocketseat/eslint-config/node"
 }
 ```

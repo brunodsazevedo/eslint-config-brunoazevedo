@@ -1,16 +1,29 @@
 {
   "name": "eslint-config-brunodsazevedo",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.0",
   "private": false,
   "description": "ESLint configuration used by brunodsazevedo.",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "type-check": "tsc --noEmit",
-    "build": "tsc",
-    "test": "npm run type-check"
+    "build": "tsc && node fix-imports.mjs",
+    "build:cleanup": "find dist -name '*.d.ts' -exec sed -i.bak 's/\\.ts/\\.js/g' {} + && find dist -name '*.bak' -delete && find dist -name '*.js' -exec sed -i.bak 's|from \"\\./\\([^\"]*\\)\";|from \"./\\1.js\";|g' {} + && find dist -name '*.bak' -delete",
+    "test": "npm run type-check && npm run test:build",
+    "test:build": "npm run build && node test-build.mjs",
+    "prepublishOnly": "npm run build",
+    "postpublish": "git push --tags"
   },
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "url": "brunodsazevedo/eslint-config-dotazevedo"
   },
@@ -40,6 +53,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.3.1",
+    "react": "^19.1.1",
     "typescript": "^5.9.2"
   }
 }
