@@ -1,0 +1,61 @@
+{
+  "name": "eslint-config-dotazevedo",
+  "version": "2.0.0",
+  "description": "Modern ESLint v9 configuration for React projects with TypeScript",
+  "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "test": "node test/unit.js",
+    "test:integration": "node test/test-scenarios.js",
+    "test:all": "npm run test && npm run test:integration",
+    "validate": "npm run test:all"
+  },
+  "keywords": [
+    "eslint",
+    "eslint9",
+    "eslintconfig",
+    "flat-config",
+    "react",
+    "typescript",
+    "prettier"
+  ],
+  "author": "Bruno Azevedo",
+  "license": "MIT",
+  "dependencies": {
+    "@eslint/js": "^9.35.0",
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/parser": "^8.43.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jsx-a11y": "^6.10.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-hooks-extra": "^1.53.1"
+  },
+  "peerDependencies": {
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "eslint": "^9.35.0",
+    "prettier": "^3.3.3",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "typescript": "^5.6.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brunodsazevedo/eslint-config-dotazevedo.git"
+  },
+  "files": [
+    "index.js",
+    "example.config.js",
+    "README.md"
+  ]
+}
