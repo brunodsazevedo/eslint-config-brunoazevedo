@@ -6,15 +6,15 @@ export class ConfigurationTest {
   }
 
   async run() {
-    this.reporter.log('📋 Testando carregamento da configuração...')
+    this.reporter.log('📋 Testing configuration loading...')
     
     try {
       const eslint = await TestUtils.createESLintInstance()
       await eslint.calculateConfigForFile('test.tsx')
       
-      this.reporter.pass('Configuração carrega corretamente')
+      this.reporter.pass('Configuration loads correctly')
     } catch (error) {
-      this.reporter.fail('Falha ao carregar configuração', error)
+      this.reporter.fail('Failed to load configuration', error)
     }
   }
 }

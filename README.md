@@ -1,17 +1,19 @@
 # ESLint Config DotAzevedo
 
-Uma configuração moderna do ESLint v9 para projetos React com TypeScript, seguindo as melhores práticas de clean code e usando apenas pacotes oficiais.
+[🇧🇷 Português](./README.pt-BR.md) | **🇺🇸 English**
 
-## 🚀 Características
+A modern ESLint v9 configuration for React projects with TypeScript, following clean code best practices and using only official packages.
 
-- **ESLint v9** com flat config format
-- **React 18+** com hooks validation
-- **TypeScript** com regras rigorosas
-- **Prettier** integração completa
-- **Acessibilidade** com jsx-a11y
-- **Zero dependências legacy** - apenas pacotes oficiais
+## 🚀 Features
 
-## 📦 Instalação
+- **ESLint v9** with flat config format
+- **React 18+** with hooks validation
+- **TypeScript** with strict rules
+- **Prettier** complete integration
+- **Accessibility** with jsx-a11y
+- **Zero legacy dependencies** - only official packages
+
+## 📦 Installation
 
 ```bash
 npm install eslint-config-dotazevedo
@@ -23,99 +25,211 @@ npm install eslint-config-dotazevedo
 npm install --save-dev eslint@^9.0.0 prettier@^3.0.0 typescript@^5.0.0
 ```
 
-## 🔧 Configuração
+## 🔧 Configuration
 
-Crie um arquivo `eslint.config.js` na raiz do seu projeto:
+Create an `eslint.config.js` file in your project root:
 
 ```javascript
-import dotazevedoConfig from 'eslint-config-dotazevedo';
+import dotazevedoConfig from 'eslint-config-dotazevedo'
 
-export default dotazevedoConfig;
+export default dotazevedoConfig
 ```
 
-### Configuração personalizada
+### Custom Configuration
 
 ```javascript
-import dotazevedoConfig from 'eslint-config-dotazevedo';
+import dotazevedoConfig from 'eslint-config-dotazevedo'
 
 export default [
   ...dotazevedoConfig,
   {
-    // Sobrescrever regras específicas
     rules: {
-      'react/jsx-props-no-spreading': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
+      // Your custom rules
+      'react/jsx-uses-react': 'off',
     },
   },
+]
+```
+
+### Disabling Specific Rules
+
+You can disable specific rules by extending the configuration:
+
+```javascript
+import dotazevedoConfig from 'eslint-config-dotazevedo'
+
+export default [
+  ...dotazevedoConfig,
   {
-    // Configuração específica para arquivos de teste
-    files: ['**/*.test.{js,ts,jsx,tsx}'],
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
+      // Disable specific rules
+      '@typescript-eslint/no-unused-vars': 'off',
+      'react-hooks/exhaustive-deps': 'warn',
+      'prettier/prettier': 'off',
+      
+      // Override rule severity
+      'jsx-a11y/alt-text': 'warn', // Change from error to warning
     },
   },
-];
+]
 ```
 
-## Scripts recomendados
+### Framework-Specific Configurations
 
-Adicione ao seu `package.json`:
+**For Next.js projects:**
+```javascript
+import dotazevedoConfig from 'eslint-config-dotazevedo'
 
-```json
-{
-  "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "type-check": "tsc --noEmit"
-  }
-}
+export default [
+  ...dotazevedoConfig,
+  {
+    rules: {
+      // Next.js specific adjustments
+      'react/react-in-jsx-scope': 'off',
+      '@next/next/no-img-element': 'error',
+    },
+  },
+]
 ```
 
-## Configuração do Prettier
+**For Vite projects:**
+```javascript
+import dotazevedoConfig from 'eslint-config-dotazevedo'
 
-Crie `.prettierrc.json`:
-
-```json
-{
-  "printWidth": 80,
-  "tabWidth": 2,
-  "singleQuote": true,
-  "trailingComma": "all",
-  "arrowParens": "always",
-  "semi": false,
-  "endOfLine": "auto"
-}
+export default [
+  ...dotazevedoConfig,
+  {
+    ignores: ['dist/**', 'vite.config.ts'],
+  },
+]
 ```
 
-## Principais recursos do ESLint v9
+## 🧪 Testing
 
-### 🆕 Flat Config
-- Sintaxe mais simples e intuitiva
-- Melhor performance
-- Configuração baseada em ES Modules
+The project includes a comprehensive test suite organized modularly:
 
-### 🔧 Regras incluídas
-- **JavaScript**: Regras essenciais do ESLint
-- **TypeScript**: Verificação de tipos + regras strict
-- **React**: Regras modernas para React 18+
-- **React Hooks**: Validação completa de hooks
-- **Acessibilidade**: jsx-a11y otimizado
-- **Prettier**: Formatação consistente
+```bash
+# Run all unit tests
+npm test
 
-### 📁 Padrões ignorados
-- `node_modules/`, `dist/`, `build/`, `.next/`
-- `coverage/`, arquivos de configuração
-- Arquivos ocultos (exceto `.github/`)
+# Run integration tests
+npm run test:integration
 
-## Migração do ESLint v8
+# Run all tests (unit + integration)
+npm run test:all
 
-Se você está migrando do ESLint v8:
+# Complete validation
+npm run validate
+```
 
-1. **Remova** `.eslintrc.{js,json,yml}`
-2. **Crie** `eslint.config.js` com a nova sintaxe
-3. **Atualize** dependências para versões compatíveis
-4. **Teste** a configuração: `npm run lint`
+### Test Structure
 
-## Licença
+```
+test/
+├── unit.js                    # Main unit test runner
+├── test-scenarios.js          # Integration tests
+├── utils/
+│   └── test-helpers.js       # Shared utilities
+└── unit/
+    ├── configuration.test.js  # Base configuration tests
+    ├── react.test.js         # React-specific tests
+    ├── typescript.test.js    # TypeScript tests
+    ├── prettier.test.js      # Prettier integration tests
+    ├── accessibility.test.js # Accessibility tests
+    └── ignore-patterns.test.js # Ignore patterns tests
+```
 
-MIT © Bruno Azevedo
+## 📋 Included Rules
+
+### JavaScript/ES6+
+- Recommended @eslint/js rules
+- Modern ES2022+ configuration
+- Import/export validation
+
+### React
+- Recommended eslint-plugin-react rules
+- Hooks validation with react-hooks
+- Extra hooks with react-hooks-extra
+- React 18+ configuration
+
+### TypeScript
+- @typescript-eslint/parser parser
+- Recommended type-checked rules
+- Strict mode enabled
+- Interface and type validation
+
+### Prettier
+- Complete integration with eslint-config-prettier
+- Formatting conflicts resolved
+- eslint-plugin-prettier for formatting
+
+### Accessibility
+- jsx-a11y with recommended rules
+- WCAG compliance
+- Accessible elements validation
+
+## 🎯 Supported Files
+
+- **JavaScript**: `.js`, `.mjs`, `.cjs`
+- **TypeScript**: `.ts`, `.tsx`
+- **React**: `.jsx`, `.tsx`
+
+## 🚫 Ignored Patterns
+
+By default, the following patterns are ignored:
+
+- `node_modules/`
+- `dist/`
+- `build/`
+- `.next/`
+- `coverage/`
+- `*.min.js`
+- `*.bundle.js`
+
+## 🔄 Versioning
+
+### v2.0.0 (Current)
+- ✅ Complete migration to ESLint v9
+- ✅ Flat config format
+- ✅ Legacy dependencies removal
+- ✅ Modularized unit tests
+- ✅ Clean code architecture
+
+### v1.x (Legacy)
+- ESLint v8 with legacy format
+- Extended configuration
+
+## 🛠️ Development
+
+### Project Structure
+
+```
+eslint-config-dotazevedo/
+├── index.js              # Main configuration
+├── package.json          # Dependencies and scripts
+├── README.md            # Documentation (English)
+├── README.pt-BR.md      # Documentation (Portuguese)
+└── test/                # Complete test suite
+```
+
+### Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/new-rule`
+3. Run tests: `npm run test:all`
+4. Commit: `git commit -m 'Add: new rule for React'`
+5. Push: `git push origin feature/new-rule`
+6. Open a Pull Request
+
+## 📄 License
+
+MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Support
+
+- **Issues**: [GitHub Issues](https://github.com/brunodsazevedo/eslint-config-dotazevedo/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/brunodsazevedo/eslint-config-dotazevedo/discussions)
+
+---
+
+Made with ❤️ by [Bruno Azevedo](https://github.com/brunodsazevedo)

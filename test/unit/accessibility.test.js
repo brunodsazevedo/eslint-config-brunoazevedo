@@ -6,36 +6,30 @@ export class AccessibilityTest {
   }
 
   async run() {
-    this.reporter.log('♿ Testando regras de acessibilidade...')
+    this.reporter.log('♿ Testing accessibility rules...')
 
     const testCases = [
       {
-        name: 'Imagem com alt text',
+        name: 'Image with alt text',
         code: `/* eslint-disable prettier/prettier */
-export const GoodImage = () => {
-  return <img src='photo.jpg' alt='Foto do usuário' />
-}`,
+import React from 'react'
+export const GoodImage = () => <img src="test.jpg" alt="Description" />`,
         shouldPass: true,
         filename: 'good-image.tsx',
       },
       {
-        name: 'Imagem sem alt text (deve dar warning)',
-        code: `export const BadImage = () => {
-  return <img src='photo.jpg' />
-}`,
+        name: 'Image without alt text (should warn)',
+        code: `/* eslint-disable prettier/prettier */
+import React from 'react'
+export const BadImage = () => <img src="test.jpg" />`,
         shouldPass: false,
         filename: 'bad-image.tsx',
       },
       {
-        name: 'Botão com aria-label',
+        name: 'Button with aria-label',
         code: `/* eslint-disable prettier/prettier */
-export const AccessibleButton = () => {
-  return (
-    <button aria-label='Fechar modal' onClick={() => {}}>
-      ✕
-    </button>
-  )
-}`,
+import React from 'react'
+export const AccessibleButton = () => <button aria-label="Close">×</button>`,
         shouldPass: true,
         filename: 'accessible-button.tsx',
       },
@@ -51,15 +45,15 @@ export const AccessibleButton = () => {
         const hasErrors = result.errorCount > 0 || result.warningCount > 0
 
         if (testCase.shouldPass && !hasErrors) {
-          this.reporter.pass(`Acessibilidade: ${testCase.name}`)
+          this.reporter.pass(`Accessibility: ${testCase.name}`)
         } else if (!testCase.shouldPass && hasErrors) {
-          this.reporter.pass(`Acessibilidade: ${testCase.name} (falhou como esperado)`)
+          this.reporter.pass(`Accessibility: ${testCase.name} (failed as expected)`)
         } else {
-          const status = testCase.shouldPass ? 'deveria passar' : 'deveria falhar'
-          this.reporter.fail(`Acessibilidade: ${testCase.name} (${status})`)
+          const status = testCase.shouldPass ? 'should pass' : 'should fail'
+          this.reporter.fail(`Accessibility: ${testCase.name} (${status})`)
         }
       } catch (error) {
-        this.reporter.fail(`Acessibilidade: ${testCase.name}`, error)
+        this.reporter.fail(`Accessibility: ${testCase.name}`, error)
       }
     }
   }

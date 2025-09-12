@@ -6,17 +6,17 @@ export class PrettierTest {
   }
 
   async run() {
-    this.reporter.log('🎨 Testando integração com Prettier...')
+    this.reporter.log('🎨 Testing Prettier integration...')
 
     const testCases = [
       {
-        name: 'Código bem formatado',
+        name: 'Well formatted code',
         code: `const obj = { name: 'test' }\nconsole.log(obj)\n`,
         shouldPass: true,
         filename: 'formatted.js',
       },
       {
-        name: 'Código mal formatado (deve falhar)',
+        name: 'Badly formatted code (should fail)',
         code: `const   obj={name:"test"};console.log(obj)`,
         shouldPass: false,
         filename: 'bad-formatted.js',
@@ -30,15 +30,15 @@ export class PrettierTest {
     for (const testCase of testCases) {
       try {
         const result = await TestUtils.lintCode(testCase.code, testCase.filename)
-        // Para o Prettier, consideramos apenas erros, não warnings
+        // For Prettier, consider only errors, not warnings
         const hasErrors = result.errorCount > 0
 
         if (testCase.shouldPass && !hasErrors) {
           this.reporter.pass(`Prettier: ${testCase.name}`)
         } else if (!testCase.shouldPass && hasErrors) {
-          this.reporter.pass(`Prettier: ${testCase.name} (falhou como esperado)`)
+          this.reporter.pass(`Prettier: ${testCase.name} (failed as expected)`)
         } else {
-          const status = testCase.shouldPass ? 'deveria passar' : 'deveria falhar'
+          const status = testCase.shouldPass ? 'should pass' : 'should fail'
           this.reporter.fail(`Prettier: ${testCase.name} (${status})`)
         }
       } catch (error) {

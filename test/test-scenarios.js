@@ -13,7 +13,7 @@ class ScenarioTester {
   }
 
   async run() {
-    console.log('🎭 Testando cenários reais de projetos...\n')
+    console.log('🎭 Testing real project scenarios...\n')
 
     await this.createScenarios()
 
@@ -21,7 +21,7 @@ class ScenarioTester {
       await this.testScenario(scenario)
     }
 
-    this.printSummary()
+    await this.printSummary()
   }
 
   async createScenarios() {
@@ -370,8 +370,7 @@ export function complexFunction(data: BadInterface) {
       for (const [filename, code] of Object.entries(scenario.files)) {
         const tempDir = join(
           __dirname,
-          'fixtures',
-          'scenarios',
+          '.tmp-scenarios',
           scenario.name.replace(/\s+/g, '-'),
         )
         await fs.mkdir(tempDir, { recursive: true })
@@ -441,7 +440,7 @@ export function complexFunction(data: BadInterface) {
     }
   }
 
-  printSummary() {
+  async printSummary() {
     console.log(`\n${'='.repeat(60)}`)
     console.log('🎭 RESUMO DOS CENÁRIOS TESTADOS')
     console.log('='.repeat(60))
@@ -454,6 +453,13 @@ export function complexFunction(data: BadInterface) {
     console.log('• 🎨 Formatação Prettier')
     console.log('• 🚫 Detecção de problemas')
     console.log('\n✨ Cenários de teste concluídos!')
+
+    // Cleanup temporary files
+    try {
+      await fs.rm(join(__dirname, '.tmp-scenarios'), { recursive: true, force: true })
+    } catch (error) {
+      // Ignore cleanup errors
+    }
   }
 }
 

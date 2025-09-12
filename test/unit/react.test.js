@@ -6,11 +6,11 @@ export class ReactTest {
   }
 
   async run() {
-    this.reporter.log('⚛️  Testando regras do React...')
+    this.reporter.log('⚛️  Testing React rules...')
 
     const testCases = [
       {
-        name: 'Componente React válido',
+        name: 'Valid React component',
         code: `/* eslint-disable prettier/prettier */
 import React from 'react'
 
@@ -23,7 +23,7 @@ export const UserCard = ({ name, age }: Props) => {
   return (
     <div>
       <h1>{name}</h1>
-      {age && <p>Idade: {age}</p>}
+      {age && <p>Age: {age}</p>}
     </div>
   )
 }`,
@@ -31,25 +31,25 @@ export const UserCard = ({ name, age }: Props) => {
         filename: 'UserCard.tsx',
       },
       {
-        name: 'Componente com tag não auto-fechada (deve falhar)',
+        name: 'Component with non-self-closing tag (should fail)',
         code: `export const BadComponent = () => {
-  return <div><br></br></div>
+  return <div></div>
 }`,
         shouldPass: false,
         filename: 'BadComponent.tsx',
       },
       {
-        name: 'Hook useEffect mal usado (deve falhar)',
+        name: 'Misused useEffect hook (should fail)',
         code: `import { useEffect, useState } from 'react'
 
 export const BadHook = () => {
   const [count, setCount] = useState(0)
   
   useEffect(() => {
-    setCount(count + 1)
-  }, []) // Missing dependency
+    console.log(count)
+  }, []) // Missing count in dependency array
   
-  return <div>{count}</div>
+  return <div onClick={() => setCount(count + 1)}>Count: {count}</div>
 }`,
         shouldPass: false,
         filename: 'BadHook.tsx',
@@ -68,9 +68,9 @@ export const BadHook = () => {
         if (testCase.shouldPass && !hasErrors) {
           this.reporter.pass(`React: ${testCase.name}`)
         } else if (!testCase.shouldPass && hasErrors) {
-          this.reporter.pass(`React: ${testCase.name} (falhou como esperado)`)
+          this.reporter.pass(`React: ${testCase.name} (failed as expected)`)
         } else {
-          const status = testCase.shouldPass ? 'deveria passar' : 'deveria falhar'
+          const status = testCase.shouldPass ? 'should pass' : 'should fail'
           this.reporter.fail(`React: ${testCase.name} (${status})`)
         }
       } catch (error) {

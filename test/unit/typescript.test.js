@@ -6,43 +6,38 @@ export class TypeScriptTest {
   }
 
   async run() {
-    this.reporter.log('🔷 Testando regras do TypeScript...')
+    this.reporter.log('🔷 Testing TypeScript rules...')
 
     const testCases = [
       {
-        name: 'TypeScript válido',
+        name: 'Valid TypeScript',
         code: `/* eslint-disable prettier/prettier */
 interface User {
-  id: number
   name: string
-  email?: string
+  age: number
 }
 
-export const createUser = (data: Omit<User, 'id'>): User => {
-  return {
-    id: Math.random(),
-    ...data,
-  }
+export const createUser = (data: User): User => {
+  return { ...data }
 }
 
-export const users: User[] = []`,
+export const user = createUser({ name: 'John', age: 30 })`,
         shouldPass: true,
-        filename: 'user.ts',
+        filename: 'valid-typescript.ts',
       },
       {
-        name: 'Uso de any (deve dar warning)',
-        code: `export const processData = (data: any) => {
-  return data.whatever
+        name: 'Usage of any (should warn)',
+        code: `export const badFunction = (param: any) => {
+  return param
 }`,
         shouldPass: false,
         filename: 'any-usage.ts',
       },
       {
-        name: 'Variável não utilizada (deve falhar)',
-        code: `export const calculate = () => {
-  const unusedVariable = 'test'
-  const result = 42
-  return result
+        name: 'Unused variable (should fail)',
+        code: `export const unusedVar = () => {
+  const unused = 'never used'
+  return 'hello'
 }`,
         shouldPass: false,
         filename: 'unused-var.ts',
@@ -61,9 +56,9 @@ export const users: User[] = []`,
         if (testCase.shouldPass && !hasErrors) {
           this.reporter.pass(`TypeScript: ${testCase.name}`)
         } else if (!testCase.shouldPass && hasErrors) {
-          this.reporter.pass(`TypeScript: ${testCase.name} (falhou como esperado)`)
+          this.reporter.pass(`TypeScript: ${testCase.name} (failed as expected)`)
         } else {
-          const status = testCase.shouldPass ? 'deveria passar' : 'deveria falhar'
+          const status = testCase.shouldPass ? 'should pass' : 'should fail'
           this.reporter.fail(`TypeScript: ${testCase.name} (${status})`)
         }
       } catch (error) {

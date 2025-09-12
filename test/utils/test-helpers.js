@@ -73,21 +73,21 @@ export class TestReporter {
 
   printResults() {
     console.log('\n' + '='.repeat(50))
-    console.log('📊 RESULTADOS DOS TESTES')
+    console.log('📊 TEST RESULTS')
     console.log('='.repeat(50))
-    console.log(`✅ Passou: ${this.passed}`)
-    console.log(`❌ Falhou: ${this.failed}`)
+    console.log(`✅ Passed: ${this.passed}`)
+    console.log(`❌ Failed: ${this.failed}`)
     console.log(`📈 Total: ${this.passed + this.failed}`)
     
     if (this.failed > 0) {
-      console.log('\n❌ FALHAS:')
+      console.log('\n❌ FAILURES:')
       this.errors.forEach((error, index) => {
         console.log(`${index + 1}. ${error.message}`)
       })
     }
     
     const success = this.failed === 0
-    console.log(`\n${success ? '🎉 TODOS OS TESTES PASSARAM!' : '💥 ALGUNS TESTES FALHARAM!'}`)
+    console.log(`\n${success ? '🎉 ALL TESTS PASSED!' : '💥 SOME TESTS FAILED!'}`)
     
     return success
   }

@@ -12,7 +12,7 @@ class TestRunner {
   }
 
   async run() {
-    console.log('🧪 Executando testes unitários da configuração ESLint...\n')
+    console.log('🧪 Running ESLint configuration unit tests...\n')
 
     try {
       const tests = [
@@ -31,12 +31,12 @@ class TestRunner {
       const success = this.reporter.printResults()
       process.exit(success ? 0 : 1)
     } catch (error) {
-      console.error('❌ Erro crítico nos testes:', error)
+      console.error('❌ Critical test error:', error)
       process.exit(1)
     }
   }
 }
 
-// Executa os testes
+// Run tests
 const runner = new TestRunner()
 runner.run()
