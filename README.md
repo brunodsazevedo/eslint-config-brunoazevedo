@@ -1,4 +1,4 @@
-# ESLint Config DotAzevedo
+# ESLint Config Bruno Azevedo
 
 [🇧🇷 Português](./README.pt-BR.md) | **🇺🇸 English**
 
@@ -16,7 +16,7 @@ A modern ESLint v9 configuration for React projects with TypeScript, following c
 ## 📦 Installation
 
 ```bash
-npm install eslint-config-dotazevedo
+npm install eslint-config-brunoazevedo
 ```
 
 ### Peer Dependencies
@@ -30,18 +30,18 @@ npm install --save-dev eslint@^9.0.0 prettier@^3.0.0 typescript@^5.0.0
 Create an `eslint.config.js` file in your project root:
 
 ```javascript
-import dotazevedoConfig from 'eslint-config-dotazevedo'
+import brunoazevedoConfig from 'eslint-config-brunoazevedo'
 
-export default dotazevedoConfig
+export default brunoazevedoConfig
 ```
 
 ### Custom Configuration
 
 ```javascript
-import dotazevedoConfig from 'eslint-config-dotazevedo'
+import brunoazevedoConfig from 'eslint-config-brunoazevedo'
 
 export default [
-  ...dotazevedoConfig,
+  ...brunoazevedoConfig,
   {
     rules: {
       // Your custom rules
@@ -56,10 +56,10 @@ export default [
 You can disable specific rules by extending the configuration:
 
 ```javascript
-import dotazevedoConfig from 'eslint-config-dotazevedo'
+import brunoazevedoConfig from 'eslint-config-brunoazevedo'
 
 export default [
-  ...dotazevedoConfig,
+  ...brunoazevedoConfig,
   {
     rules: {
       // Disable specific rules
@@ -78,10 +78,10 @@ export default [
 
 **For Next.js projects:**
 ```javascript
-import dotazevedoConfig from 'eslint-config-dotazevedo'
+import brunoazevedoConfig from 'eslint-config-brunoazevedo'
 
 export default [
-  ...dotazevedoConfig,
+  ...brunoazevedoConfig,
   {
     rules: {
       // Next.js specific adjustments
@@ -94,10 +94,10 @@ export default [
 
 **For Vite projects:**
 ```javascript
-import dotazevedoConfig from 'eslint-config-dotazevedo'
+import brunoazevedoConfig from 'eslint-config-brunoazevedo'
 
 export default [
-  ...dotazevedoConfig,
+  ...brunoazevedoConfig,
   {
     ignores: ['dist/**', 'vite.config.ts'],
   },
@@ -204,7 +204,7 @@ By default, the following patterns are ignored:
 ### Project Structure
 
 ```
-eslint-config-dotazevedo/
+eslint-config-brunoazevedo/
 ├── index.js              # Main configuration
 ├── package.json          # Dependencies and scripts
 ├── README.md            # Documentation (English)
@@ -227,8 +227,8 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🤝 Support
 
-- **Issues**: [GitHub Issues](https://github.com/brunodsazevedo/eslint-config-dotazevedo/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/brunodsazevedo/eslint-config-dotazevedo/discussions)
+- **Issues**: [GitHub Issues](https://github.com/brunodsazevedo/eslint-config-brunoazevedo/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/brunodsazevedo/eslint-config-brunoazevedo/discussions)
 
 ---
 

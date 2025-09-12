@@ -1,5 +1,5 @@
 {
-  "name": "eslint-config-brunodsazevedo",
+  "name": "eslint-config-brunoazevedo",
   "version": "1.0.0-rc.0",
   "description": "Modern ESLint v9 configuration for React projects with TypeScript",
   "main": "index.js",
@@ -51,7 +51,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/brunodsazevedo/eslint-config-dotazevedo.git"
+    "url": "https://github.com/brunodsazevedo/eslint-config-brunoazevedo.git"
   },
   "files": [
     "index.js",

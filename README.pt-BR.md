@@ -1,4 +1,4 @@
-# ESLint Config DotAzevedo
+# ESLint Config Bruno Azevedo
 
 **🇧🇷 Português** | [🇺🇸 English](./README.md)
 
@@ -16,7 +16,7 @@ Uma configuração moderna do ESLint v9 para projetos React com TypeScript, segu
 ## 📦 Instalação
 
 ```bash
-npm install eslint-config-dotazevedo
+npm install eslint-config-brunoazevedo
 ```
 
 ### Peer Dependencies
@@ -30,18 +30,18 @@ npm install --save-dev eslint@^9.0.0 prettier@^3.0.0 typescript@^5.0.0
 Crie um arquivo `eslint.config.js` na raiz do seu projeto:
 
 ```javascript
-import dotazevedoConfig from 'eslint-config-dotazevedo';
+import brunoazevedoConfig from 'eslint-config-brunoazevedo';
 
-export default dotazevedoConfig;
+export default brunoazevedoConfig;
 ```
 
 ### Configuração Personalizada
 
 ```javascript
-import dotazevedoConfig from 'eslint-config-dotazevedo'
+import brunoazevedoConfig from 'eslint-config-brunoazevedo'
 
 export default [
-  ...dotazevedoConfig,
+  ...brunoazevedoConfig,
   {
     rules: {
       // Suas regras personalizadas
@@ -56,10 +56,10 @@ export default [
 Você pode desabilitar regras específicas estendendo a configuração:
 
 ```javascript
-import dotazevedoConfig from 'eslint-config-dotazevedo'
+import brunoazevedoConfig from 'eslint-config-brunoazevedo'
 
 export default [
-  ...dotazevedoConfig,
+  ...brunoazevedoConfig,
   {
     rules: {
       // Desabilitar regras específicas
@@ -78,10 +78,10 @@ export default [
 
 **Para projetos Next.js:**
 ```javascript
-import dotazevedoConfig from 'eslint-config-dotazevedo'
+import brunoazevedoConfig from 'eslint-config-brunoazevedo'
 
 export default [
-  ...dotazevedoConfig,
+  ...brunoazevedoConfig,
   {
     rules: {
       // Ajustes específicos para Next.js
@@ -94,10 +94,10 @@ export default [
 
 **Para projetos Vite:**
 ```javascript
-import dotazevedoConfig from 'eslint-config-dotazevedo'
+import brunoazevedoConfig from 'eslint-config-brunoazevedo'
 
 export default [
-  ...dotazevedoConfig,
+  ...brunoazevedoConfig,
   {
     ignores: ['dist/**', 'vite.config.ts'],
   },
