@@ -1,6 +1,6 @@
 # ESLint Config Bruno Azevedo
 
-[🇧🇷 Português](./README.pt-BR.md) | **🇺🇸 English**
+[🇧🇷 Portuguese](./README.pt-BR.md) | **🇺🇸 English**
 
 A modern ESLint v9 configuration for React projects with TypeScript, following clean code best practices and using only official packages.
 
