@@ -125,6 +125,7 @@ export default [
   },
 ]
 
+```
 ## 📋 Included Rules
 
 ### JavaScript/ES6+
