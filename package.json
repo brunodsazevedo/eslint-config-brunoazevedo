@@ -1,59 +1,99 @@
 {
-  "name": "eslint-config-brunodsazevedo",
-  "version": "1.0.0-beta.0",
-  "private": false,
-  "description": "ESLint configuration used by brunodsazevedo.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "name": "eslint-config-brunoazevedo",
+  "version": "1.0.0",
+  "description": "🚀 Modern ESLint v9 flat config for React + TypeScript projects with Prettier integration, accessibility rules, and comprehensive testing suite",
+  "main": "index.js",
   "type": "module",
-  "files": [
-    "dist/**/*",
-    "README.md",
-    "LICENSE"
-  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
-    "type-check": "tsc --noEmit",
-    "build": "tsc && node fix-imports.mjs",
-    "build:cleanup": "find dist -name '*.d.ts' -exec sed -i.bak 's/\\.ts/\\.js/g' {} + && find dist -name '*.bak' -delete && find dist -name '*.js' -exec sed -i.bak 's|from \"\\./\\([^\"]*\\)\";|from \"./\\1.js\";|g' {} + && find dist -name '*.bak' -delete",
-    "test": "npm run type-check && npm run test:build",
-    "test:build": "npm run build && node test-build.mjs",
-    "prepublishOnly": "npm run build",
-    "postpublish": "git push --tags"
+    "test": "node test/unit.js",
+    "test:integration": "node test/test-scenarios.js",
+    "test:all": "npm run test && npm run test:integration",
+    "validate": "npm run test:all",
+    "prepublishOnly": "npm run validate"
+  },
+  "keywords": [
+    "eslint",
+    "eslint-config",
+    "eslint9",
+    "eslintconfig",
+    "flat-config",
+    "react",
+    "react18",
+    "typescript",
+    "tsx",
+    "prettier",
+    "jsx-a11y",
+    "accessibility",
+    "git-flow",
+    "react-hooks",
+    "code-quality",
+    "linting",
+    "javascript",
+    "es2022",
+    "modern-js",
+    "nextjs",
+    "vite",
+    "clean-code",
+    "best-practices",
+    "bruno-azevedo"
+  ],
+  "author": {
+    "name": "Bruno Azevedo",
+    "email": "brunodsazevedo@gmail.com",
+    "url": "https://github.com/brunodsazevedo"
   },
   "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
+  "homepage": "https://github.com/brunodsazevedo/eslint-config-brunoazevedo#readme",
   "repository": {
-    "url": "brunodsazevedo/eslint-config-dotazevedo"
+    "type": "git",
+    "url": "git+https://github.com/brunodsazevedo/eslint-config-brunoazevedo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/brunodsazevedo/eslint-config-brunoazevedo/issues"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.35.0",
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/parser": "^8.43.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jsx-a11y": "^6.10.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-hooks-extra": "^1.53.1"
   },
   "peerDependencies": {
     "eslint": "^9.0.0",
-    "typescript": ">=5"
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
   },
   "peerDependenciesMeta": {
     "typescript": {
       "optional": true
     }
   },
-  "dependencies": {
-    "@eslint/js": "^9.35.0",
-    "@typescript-eslint/eslint-plugin": "^8.41.0",
-    "@typescript-eslint/parser": "^8.41.0",
-    "eslint": "^9.0.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-n": "^17.21.3",
-    "eslint-plugin-prettier": "^5.5.4",
-    "eslint-plugin-promise": "^7.2.1",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "prettier": "^3.6.2"
-  },
   "devDependencies": {
-    "@types/node": "^24.3.1",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "eslint": "^9.35.0",
+    "prettier": "^3.3.3",
     "react": "^19.1.1",
-    "typescript": "^5.9.2"
+    "react-dom": "^19.1.1",
+    "typescript": "^5.6.2"
+  },
+  "files": [
+    "index.js",
+    "react-config.js",
+    "README.md",
+    "README.pt-BR.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
