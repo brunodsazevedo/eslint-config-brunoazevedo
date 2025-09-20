@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-brunoazevedo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "🚀 Modern ESLint v9 flat config for React + TypeScript projects with Prettier integration, accessibility rules, and comprehensive testing suite",
   "main": "index.js",
   "type": "module",
