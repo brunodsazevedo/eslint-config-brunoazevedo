@@ -124,67 +124,74 @@ export default [
     },
   },
 ]
-```
 
-## Scripts recomendados
+## � Regras Incluídas
 
-Adicione ao seu `package.json`:
+### JavaScript/ES6+
+- Regras recomendadas do @eslint/js
+- Configuração moderna ES2022+
+- Validação de import/export
 
-```json
-{
-  "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "type-check": "tsc --noEmit"
-  }
-}
-```
+### React
+- Regras recomendadas do eslint-plugin-react
+- Validação de hooks com react-hooks
+- Hooks extras com react-hooks-extra
+- Configuração React 18+
 
-## Configuração do Prettier
+### TypeScript
+- Parser @typescript-eslint/parser
+- Regras recomendadas com verificação de tipos
+- Modo strict habilitado
+- Validação de interfaces e tipos
 
-Crie `.prettierrc.json`:
+### Prettier
+- Integração completa com eslint-config-prettier
+- Conflitos de formatação resolvidos
+- eslint-plugin-prettier para formatação
 
-```json
-{
-  "printWidth": 80,
-  "tabWidth": 2,
-  "singleQuote": true,
-  "trailingComma": "all",
-  "arrowParens": "always",
-  "semi": false,
-  "endOfLine": "auto"
-}
-```
+### Acessibilidade
+- jsx-a11y com regras recomendadas
+- Conformidade WCAG
+- Validação de elementos acessíveis
 
-## Principais recursos do ESLint v9
+## 🎯 Arquivos Suportados
 
-### 🆕 Flat Config
-- Sintaxe mais simples e intuitiva
-- Melhor performance
-- Configuração baseada em ES Modules
+- **JavaScript**: `.js`, `.mjs`, `.cjs`
+- **TypeScript**: `.ts`, `.tsx`
+- **React**: `.jsx`, `.tsx`
 
-### 🔧 Regras incluídas
-- **JavaScript**: Regras essenciais do ESLint
-- **TypeScript**: Verificação de tipos + regras strict
-- **React**: Regras modernas para React 18+
-- **React Hooks**: Validação completa de hooks
-- **Acessibilidade**: jsx-a11y otimizado
-- **Prettier**: Formatação consistente
+## 🚫 Padrões Ignorados
 
-### 📁 Padrões ignorados
-- `node_modules/`, `dist/`, `build/`, `.next/`
-- `coverage/`, arquivos de configuração
-- Arquivos ocultos (exceto `.github/`)
+Por padrão, os seguintes padrões são ignorados:
 
-## Migração do ESLint v8
+- `node_modules/`
+- `dist/`
+- `build/`
+- `.next/`
+- `coverage/`
+- `*.min.js`
+- `*.bundle.js`
 
-Se você está migrando do ESLint v8:
+## 🛠️ Desenvolvimento
 
-1. **Remova** `.eslintrc.{js,json,yml}`
-2. **Crie** `eslint.config.mjs` com a nova sintaxe
-3. **Atualize** dependências para versões compatíveis
-4. **Teste** a configuração: `npm run lint`
+### Contribuindo
 
-## Licença
+1. Faça um fork do repositório
+2. Crie uma branch de feature: `git checkout -b feature/nova-regra`
+3. Execute os testes: `npm run test:all`
+4. Commit: `git commit -m 'Add: nova regra para React'`
+5. Push: `git push origin feature/nova-regra`
+6. Abra um Pull Request
 
-MIT © Bruno Azevedo
+## 📄 Licença
+
+Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+## 🤝 Suporte
+
+- **Issues**: [GitHub Issues](https://github.com/brunodsazevedo/eslint-config-brunoazevedo/issues)
+- **Discussões**: [GitHub Discussions](https://github.com/brunodsazevedo/eslint-config-brunoazevedo/discussions)
+
+---
+
+Feito com ❤️ por [Bruno Azevedo](https://github.com/brunodsazevedo)

@@ -125,41 +125,6 @@ export default [
   },
 ]
 
-## 🧪 Testing
-
-The project includes a comprehensive test suite organized modularly:
-
-```bash
-# Run all unit tests
-npm test
-
-# Run integration tests
-npm run test:integration
-
-# Run all tests (unit + integration)
-npm run test:all
-
-# Complete validation
-npm run validate
-```
-
-### Test Structure
-
-```
-test/
-├── unit.js                    # Main unit test runner
-├── test-scenarios.js          # Integration tests
-├── utils/
-│   └── test-helpers.js       # Shared utilities
-└── unit/
-    ├── configuration.test.js  # Base configuration tests
-    ├── react.test.js         # React-specific tests
-    ├── typescript.test.js    # TypeScript tests
-    ├── prettier.test.js      # Prettier integration tests
-    ├── accessibility.test.js # Accessibility tests
-    └── ignore-patterns.test.js # Ignore patterns tests
-```
-
 ## 📋 Included Rules
 
 ### JavaScript/ES6+
@@ -207,31 +172,7 @@ By default, the following patterns are ignored:
 - `*.min.js`
 - `*.bundle.js`
 
-## 🔄 Versioning
-
-### v2.0.0 (Current)
-- ✅ Complete migration to ESLint v9
-- ✅ Flat config format
-- ✅ Legacy dependencies removal
-- ✅ Modularized unit tests
-- ✅ Clean code architecture
-
-### v1.x (Legacy)
-- ESLint v8 with legacy format
-- Extended configuration
-
 ## 🛠️ Development
-
-### Project Structure
-
-```
-eslint-config-brunoazevedo/
-├── index.js              # Main configuration
-├── package.json          # Dependencies and scripts
-├── README.md            # Documentation (English)
-├── README.pt-BR.md      # Documentation (Portuguese)
-└── test/                # Complete test suite
-```
 
 ### Contributing
 
