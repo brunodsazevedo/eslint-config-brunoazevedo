@@ -1,29 +1,59 @@
 {
   "name": "eslint-config-brunoazevedo",
   "version": "1.0.0-rc.0",
-  "description": "Modern ESLint v9 configuration for React projects with TypeScript",
+  "description": "🚀 Modern ESLint v9 flat config for React + TypeScript projects with Prettier integration, accessibility rules, and comprehensive testing suite",
   "main": "index.js",
   "type": "module",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   },
   "scripts": {
     "test": "node test/unit.js",
     "test:integration": "node test/test-scenarios.js",
     "test:all": "npm run test && npm run test:integration",
-    "validate": "npm run test:all"
+    "validate": "npm run test:all",
+    "prepublishOnly": "npm run validate"
   },
   "keywords": [
     "eslint",
+    "eslint-config",
     "eslint9",
     "eslintconfig",
     "flat-config",
     "react",
+    "react18",
     "typescript",
-    "prettier"
+    "tsx",
+    "prettier",
+    "jsx-a11y",
+    "accessibility",
+    "react-hooks",
+    "code-quality",
+    "linting",
+    "javascript",
+    "es2022",
+    "modern-js",
+    "nextjs",
+    "vite",
+    "clean-code",
+    "best-practices",
+    "bruno-azevedo"
   ],
-  "author": "Bruno Azevedo",
+  "author": {
+    "name": "Bruno Azevedo",
+    "email": "brunodsazevedo@gmail.com",
+    "url": "https://github.com/brunodsazevedo"
+  },
   "license": "MIT",
+  "homepage": "https://github.com/brunodsazevedo/eslint-config-brunoazevedo#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunodsazevedo/eslint-config-brunoazevedo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/brunodsazevedo/eslint-config-brunoazevedo/issues"
+  },
   "dependencies": {
     "@eslint/js": "^9.35.0",
     "@typescript-eslint/eslint-plugin": "^8.43.0",
@@ -40,6 +70,11 @@
     "prettier": "^3.0.0",
     "typescript": "^5.0.0"
   },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
@@ -49,15 +84,15 @@
     "react-dom": "^19.1.1",
     "typescript": "^5.6.2"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/brunodsazevedo/eslint-config-brunoazevedo.git"
-  },
   "files": [
     "index.js",
     "react-config.js",
     "README.md",
     "README.pt-BR.md",
     "LICENSE"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }
