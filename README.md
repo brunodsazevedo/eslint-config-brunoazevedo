@@ -14,19 +14,25 @@ A modern ESLint v9 configuration for React projects with TypeScript, following c
 
 ## 📦 Installation
 
-```bash
-npm install eslint-config-brunoazevedo
-```
+### Prerequisites
 
-### Peer Dependencies
+First, make sure you have ESLint and Prettier installed as dev dependencies:
 
 ```bash
-npm install --save-dev eslint@^9.0.0 prettier@^3.0.0 typescript@^5.0.0
+npm install -D eslint prettier
 ```
+
+### Install the config
+
+```bash
+npm install -D eslint-config-brunoazevedo
+```
+
+> **Note**: If you're using TypeScript, also install: `npm install -D typescript`
 
 ## 🔧 Configuration
 
-Create an `eslint.config.js` file in your project root:
+Create an `eslint.config.mjs` file in your project root:
 
 ```javascript
 import { reactConfig } from 'eslint-config-brunoazevedo'
