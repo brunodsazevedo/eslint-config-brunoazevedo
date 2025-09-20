@@ -3,7 +3,7 @@ name: 🚀 Release & Publish
 on:
   # Trigger automático para Git Flow
   push:
-    branches: [master, develop]
+    branches: [main, develop]
     paths-ignore:
       - 'README*.md'
       - 'LICENSE'
@@ -12,7 +12,7 @@ on:
   
   # Trigger para branches de release e hotfix (Git Flow)
   pull_request:
-    branches: [master]
+    branches: [main]
     types: [closed]
     paths-ignore:
       - 'README*.md'
@@ -35,10 +35,10 @@ on:
       branch:
         description: 'Branch para release'
         required: true
-        default: 'master'
+        default: 'main'
         type: choice
         options:
-          - master
+          - main
           - develop
 
 env:
@@ -78,7 +78,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: ci
     if: |
-      (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') ||
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') ||
       (github.event_name == 'pull_request' && github.event.pull_request.merged == true && 
        (startsWith(github.head_ref, 'release/') || startsWith(github.head_ref, 'hotfix/')))
     steps:
@@ -110,16 +110,16 @@ jobs:
             VERSION_TYPE="${{ github.event.inputs.version_type }}"
             BRANCH="${{ github.event.inputs.branch }}"
           elif [ "${{ github.event_name }}" = "pull_request" ]; then
-            # Git Flow: release/ ou hotfix/ mergeados na master
+            # Git Flow: release/ ou hotfix/ mergeados na main
             if [[ "${{ github.head_ref }}" =~ ^release/ ]]; then
               VERSION_TYPE="minor"
-              BRANCH="master"
+              BRANCH="main"
             elif [[ "${{ github.head_ref }}" =~ ^hotfix/ ]]; then
               VERSION_TYPE="patch"
-              BRANCH="master"
+              BRANCH="main"
             else
               VERSION_TYPE="patch"
-              BRANCH="master"
+              BRANCH="main"
             fi
           else
             # Push direto na branch
@@ -135,8 +135,8 @@ jobs:
           echo "📋 Event: ${{ github.event_name }}"
           echo "🔗 Head ref: ${{ github.head_ref }}"
 
-      - name: 🏷️ Bump version (Master - Release)
-        if: steps.version.outputs.branch == 'master'
+      - name: 🏷️ Bump version (Main - Release)
+        if: steps.version.outputs.branch == 'main'
         run: |
           # Atualizar versão principal
           npm version ${{ steps.version.outputs.type }} --no-git-tag-version
@@ -194,7 +194,7 @@ jobs:
       - name: 📋 Generate changelog
         id: changelog
         run: |
-          if [ "${{ steps.version.outputs.branch }}" = "master" ]; then
+          if [ "${{ steps.version.outputs.branch }}" = "main" ]; then
             # Changelog para release
             CHANGELOG=$(git log --oneline --pretty=format:"- %s" $(git describe --tags --abbrev=0 HEAD~1)..HEAD 2>/dev/null || git log --oneline --pretty=format:"- %s" HEAD~5..HEAD)
           else
@@ -206,8 +206,8 @@ jobs:
           echo "$CHANGELOG" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: 🎉 Create GitHub Release (Master)
-        if: steps.version.outputs.branch == 'master'
+      - name: 🎉 Create GitHub Release (Main)
+        if: steps.version.outputs.branch == 'main'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -261,7 +261,7 @@ jobs:
           prerelease: true
 
       - name: 📦 Publish to npm (Release)
-        if: steps.version.outputs.branch == 'master'
+        if: steps.version.outputs.branch == 'main'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
@@ -278,9 +278,9 @@ jobs:
 
       - name: 🎊 Success notification
         run: |
-          if [ "${{ steps.version.outputs.branch }}" = "master" ]; then
+          if [ "${{ steps.version.outputs.branch }}" = "main" ]; then
             echo "🎉 Successfully released v${{ env.NEW_VERSION }} to npm!"
-            echo "📦 Install: npm install -D eslint-config-brunoazevedo@${{ env.NEW_VERSION }}"
+            echo "📦 Install: npm install -D eslint-config-brunoazevedo@{{ env.NEW_VERSION }}"
           else
             echo "🧪 Successfully published beta v${{ env.NEW_VERSION }} to npm!"
             echo "📦 Install: npm install -D eslint-config-brunoazevedo@${{ env.NEW_VERSION }}"
