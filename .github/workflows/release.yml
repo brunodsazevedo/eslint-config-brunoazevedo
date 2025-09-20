@@ -1,26 +1,19 @@
-name: 🚀 Release & Publish
+name: 🚀 CI/CD Git Flow
 
 on:
-  # Trigger automático para Git Flow
+  # Triggers principais - Git Flow oriented
   push:
-    branches: [main, develop]
+    branches: 
+      - main           # Release final
+      - develop        # Development beta
+    tags:
+      - 'v*'           # Tags criadas pelo git flow
     paths-ignore:
-      - 'README*.md'
+      - '**.md'
       - 'LICENSE'
       - '.gitignore'
-      - 'docs/**'
   
-  # Trigger para branches de release e hotfix (Git Flow)
-  pull_request:
-    branches: [main]
-    types: [closed]
-    paths-ignore:
-      - 'README*.md'
-      - 'LICENSE'
-      - '.gitignore'
-      - 'docs/**'
-  
-  # Trigger manual para controle de versionamento
+  # Trigger manual para casos especiais
   workflow_dispatch:
     inputs:
       version_type:
@@ -29,11 +22,11 @@ on:
         default: 'patch'
         type: choice
         options:
-          - patch   # 1.0.0 -> 1.0.1
-          - minor   # 1.0.0 -> 1.1.0
-          - major   # 1.0.0 -> 2.0.0
-      branch:
-        description: 'Branch para release'
+          - patch
+          - minor  
+          - major
+      target_branch:
+        description: 'Branch alvo'
         required: true
         default: 'main'
         type: choice
@@ -45,12 +38,12 @@ env:
   NODE_VERSION: '18'
 
 jobs:
-  # Job de CI - Testes e validação
+  # CI - Sempre executa para validar código
   ci:
     name: 🧪 Continuous Integration
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout repository
+      - name: 📥 Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -67,28 +60,28 @@ jobs:
       - name: ✅ Run tests
         run: npm run validate
 
-      - name: 📊 Test coverage check
+      - name: 📊 Test summary
         run: |
           echo "✅ All tests passed successfully!"
-          echo "📋 Configuration validation completed"
+          echo "📋 Ready for deployment"
 
-  # Job de CD - Release e Deploy
+  # CD - Apenas para main e develop
   cd:
-    name: 🚀 Continuous Deployment
+    name: 🚀 Continuous Deployment  
     runs-on: ubuntu-latest
     needs: ci
     if: |
-      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') ||
-      (github.event_name == 'pull_request' && github.event.pull_request.merged == true && 
-       (startsWith(github.head_ref, 'release/') || startsWith(github.head_ref, 'hotfix/')))
+      (github.ref == 'refs/heads/main' || 
+       github.ref == 'refs/heads/develop' ||
+       startsWith(github.ref, 'refs/tags/v'))
     steps:
-      - name: 📥 Checkout repository
+      - name: 📥 Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 📦 Setup Node.js
+      - name: 📦 Setup Node.js  
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -98,116 +91,70 @@ jobs:
       - name: 🔧 Install dependencies
         run: npm ci
 
-      - name: 🏷️ Configure Git
+      - name: � Determine deployment strategy
+        id: strategy
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "type=release" >> $GITHUB_OUTPUT
+            echo "npm_tag=latest" >> $GITHUB_OUTPUT
+            echo "🚀 Main branch - Production release"
+          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            echo "type=beta" >> $GITHUB_OUTPUT  
+            echo "npm_tag=beta" >> $GITHUB_OUTPUT
+            echo "🧪 Develop branch - Beta release"
+          elif [[ "${{ github.ref }}" =~ refs/tags/v ]]; then
+            echo "type=tag" >> $GITHUB_OUTPUT
+            echo "npm_tag=latest" >> $GITHUB_OUTPUT
+            echo "�️ Tag release - Production"
+          else
+            echo "type=none" >> $GITHUB_OUTPUT
+            echo "❌ No deployment needed"
+          fi
+
+      - name: 📋 Read package version
+        id: package
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Current version: $VERSION"
+
+      - name: 🧪 Auto-version for develop (beta)
+        if: steps.strategy.outputs.type == 'beta'
+        run: |
+          CURRENT_VERSION="${{ steps.package.outputs.version }}"
+          
+          # Se já é beta, apenas incremente
+          if [[ "$CURRENT_VERSION" =~ -beta\. ]]; then
+            npm version prerelease --preid=beta --no-git-tag-version
+          else
+            # Se não é beta, torne beta
+            npm version patch --no-git-tag-version
+            NEW_VERSION=$(node -p "require('./package.json').version")
+            npm version $NEW_VERSION-beta.1 --no-git-tag-version
+          fi
+          
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo "🧪 New beta version: $NEW_VERSION"
+
+      - name: � Use existing version for main/tags
+        if: steps.strategy.outputs.type == 'release' || steps.strategy.outputs.type == 'tag'
+        run: |
+          VERSION="${{ steps.package.outputs.version }}"
+          echo "NEW_VERSION=$VERSION" >> $GITHUB_ENV
+          echo "🚀 Using version: $VERSION"
+
+      - name: � Commit version update (beta only)
+        if: steps.strategy.outputs.type == 'beta'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-
-      - name: 📈 Determine version type
-        id: version
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            VERSION_TYPE="${{ github.event.inputs.version_type }}"
-            BRANCH="${{ github.event.inputs.branch }}"
-          elif [ "${{ github.event_name }}" = "pull_request" ]; then
-            # Git Flow: release/ ou hotfix/ mergeados na main
-            if [[ "${{ github.head_ref }}" =~ ^release/ ]]; then
-              VERSION_TYPE="minor"
-              BRANCH="main"
-            elif [[ "${{ github.head_ref }}" =~ ^hotfix/ ]]; then
-              VERSION_TYPE="patch"
-              BRANCH="main"
-            else
-              VERSION_TYPE="patch"
-              BRANCH="main"
-            fi
-          else
-            # Push direto na branch
-            VERSION_TYPE="patch"
-            BRANCH="${{ github.ref_name }}"
-          fi
-          
-          echo "type=$VERSION_TYPE" >> $GITHUB_OUTPUT
-          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
-          
-          echo "🎯 Version type: $VERSION_TYPE"
-          echo "🌿 Branch: $BRANCH"
-          echo "📋 Event: ${{ github.event_name }}"
-          echo "🔗 Head ref: ${{ github.head_ref }}"
-
-      - name: 🏷️ Bump version (Main - Release)
-        if: steps.version.outputs.branch == 'main'
-        run: |
-          # Atualizar versão principal
-          npm version ${{ steps.version.outputs.type }} --no-git-tag-version
-          
-          # Obter nova versão
-          NEW_VERSION=$(node -p "require('./package.json').version")
-          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          
-          echo "🎉 New release version: $NEW_VERSION"
-
-      - name: 🏷️ Bump version (Develop - Beta)
-        if: steps.version.outputs.branch == 'develop'
-        run: |
-          # Obter versão atual
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          
-          # Remover sufixo beta se existir
-          BASE_VERSION=$(echo $CURRENT_VERSION | sed 's/-beta\.[0-9]*$//')
-          
-          # Incrementar versão base
-          npm version ${{ steps.version.outputs.type }} --no-git-tag-version
-          
-          # Obter nova versão base
-          BASE_NEW_VERSION=$(node -p "require('./package.json').version")
-          
-          # Adicionar sufixo beta
-          BETA_VERSION="$BASE_NEW_VERSION-beta.1"
-          
-          # Verificar se já existe uma versão beta e incrementar
-          if npm view eslint-config-brunoazevedo@$BETA_VERSION > /dev/null 2>&1; then
-            BETA_COUNT=1
-            while npm view eslint-config-brunoazevedo@$BASE_NEW_VERSION-beta.$((BETA_COUNT + 1)) > /dev/null 2>&1; do
-              BETA_COUNT=$((BETA_COUNT + 1))
-            done
-            BETA_VERSION="$BASE_NEW_VERSION-beta.$((BETA_COUNT + 1))"
-          fi
-          
-          # Definir versão beta
-          npm version $BETA_VERSION --no-git-tag-version
-          echo "NEW_VERSION=$BETA_VERSION" >> $GITHUB_ENV
-          
-          echo "🧪 New beta version: $BETA_VERSION"
-
-      - name: 📝 Update package.json in repository
-        run: |
           git add package.json
-          git commit -m "🔖 Release version ${{ env.NEW_VERSION }}"
-          git push origin ${{ steps.version.outputs.branch }}
+          git commit -m "chore: bump version to ${{ env.NEW_VERSION }}" || echo "No changes to commit"
+          git push origin develop || echo "Push failed, continuing..."
 
-      - name: 🏷️ Create Git tag
-        run: |
-          git tag -a "v${{ env.NEW_VERSION }}" -m "Release version ${{ env.NEW_VERSION }}"
-          git push origin "v${{ env.NEW_VERSION }}"
-
-      - name: 📋 Generate changelog
-        id: changelog
-        run: |
-          if [ "${{ steps.version.outputs.branch }}" = "main" ]; then
-            # Changelog para release
-            CHANGELOG=$(git log --oneline --pretty=format:"- %s" $(git describe --tags --abbrev=0 HEAD~1)..HEAD 2>/dev/null || git log --oneline --pretty=format:"- %s" HEAD~5..HEAD)
-          else
-            # Changelog para beta
-            CHANGELOG=$(git log --oneline --pretty=format:"- %s" HEAD~3..HEAD)
-          fi
-          
-          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
-          echo "$CHANGELOG" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: 🎉 Create GitHub Release (Main)
-        if: steps.version.outputs.branch == 'main'
+      - name: 🎉 Create GitHub Release (main only)
+        if: steps.strategy.outputs.type == 'release'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -217,10 +164,7 @@ jobs:
           body: |
             ## 🎉 ESLint Config Bruno Azevedo v${{ env.NEW_VERSION }}
             
-            ### 📋 Changes in this release:
-            ${{ steps.changelog.outputs.CHANGELOG }}
-            
-            ### 📦 Installation:
+            ###  Installation:
             ```bash
             npm install -D eslint-config-brunoazevedo@${{ env.NEW_VERSION }}
             ```
@@ -228,12 +172,11 @@ jobs:
             ### 🔗 Links:
             - 📖 [Documentation](https://github.com/brunodsazevedo/eslint-config-brunoazevedo#readme)
             - 📦 [npm Package](https://www.npmjs.com/package/eslint-config-brunoazevedo)
-            - 🐛 [Report Issues](https://github.com/brunodsazevedo/eslint-config-brunoazevedo/issues)
           draft: false
           prerelease: false
 
-      - name: 🧪 Create GitHub Pre-release (Develop)
-        if: steps.version.outputs.branch == 'develop'
+      - name: 🧪 Create GitHub Pre-release (develop only)  
+        if: steps.strategy.outputs.type == 'beta'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -243,46 +186,26 @@ jobs:
           body: |
             ## 🧪 ESLint Config Bruno Azevedo v${{ env.NEW_VERSION }} (Beta)
             
-            > ⚠️ **This is a pre-release version for testing purposes**
+            > ⚠️ **Pre-release version for testing**
             
-            ### 📋 Changes in this beta:
-            ${{ steps.changelog.outputs.CHANGELOG }}
-            
-            ### 📦 Installation:
+            ###  Installation:
             ```bash
-            npm install -D eslint-config-brunoazevedo@${{ env.NEW_VERSION }}
+            npm install -D eslint-config-brunoazevedo@beta
             ```
-            
-            ### 🔗 Links:
-            - 📖 [Documentation](https://github.com/brunodsazevedo/eslint-config-brunoazevedo#readme)
-            - 📦 [npm Package](https://www.npmjs.com/package/eslint-config-brunoazevedo)
-            - 🐛 [Report Issues](https://github.com/brunodsazevedo/eslint-config-brunoazevedo/issues)
           draft: false
           prerelease: true
 
-      - name: 📦 Publish to npm (Release)
-        if: steps.version.outputs.branch == 'main'
+      - name: 📦 Publish to npm
+        if: steps.strategy.outputs.type != 'none'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          echo "🚀 Publishing release version to npm..."
-          npm publish --access public
-
-      - name: 📦 Publish to npm (Beta)
-        if: steps.version.outputs.branch == 'develop'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "🧪 Publishing beta version to npm..."
-          npm publish --access public --tag beta
+          echo "� Publishing to npm with tag: ${{ steps.strategy.outputs.npm_tag }}"
+          npm publish --access public --tag ${{ steps.strategy.outputs.npm_tag }}
 
       - name: 🎊 Success notification
+        if: steps.strategy.outputs.type != 'none'
         run: |
-          if [ "${{ steps.version.outputs.branch }}" = "main" ]; then
-            echo "🎉 Successfully released v${{ env.NEW_VERSION }} to npm!"
-            echo "📦 Install: npm install -D eslint-config-brunoazevedo@{{ env.NEW_VERSION }}"
-          else
-            echo "🧪 Successfully published beta v${{ env.NEW_VERSION }} to npm!"
-            echo "📦 Install: npm install -D eslint-config-brunoazevedo@${{ env.NEW_VERSION }}"
-            echo "🏷️  Or use: npm install -D eslint-config-brunoazevedo@beta"
-          fi
+          echo "🎉 Successfully published v${{ env.NEW_VERSION }}"
+          echo "📦 Install: npm install -D eslint-config-brunoazevedo@${{ steps.strategy.outputs.npm_tag }}"
+          echo "🔗 Package: https://www.npmjs.com/package/eslint-config-brunoazevedo"
