@@ -13,7 +13,7 @@ export class TestUtils {
     
     return new ESLint({
       overrideConfigFile: true,
-      overrideConfig: config.default,
+      overrideConfig: config.reactConfig,
     })
   }
 

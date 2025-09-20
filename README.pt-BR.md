@@ -11,7 +11,6 @@ Uma configuração moderna do ESLint v9 para projetos React com TypeScript, segu
 - **TypeScript** com regras rigorosas
 - **Prettier** integração completa
 - **Acessibilidade** com jsx-a11y
-- **Zero dependências legacy** - apenas pacotes oficiais
 
 ## 📦 Instalação
 
@@ -30,18 +29,18 @@ npm install --save-dev eslint@^9.0.0 prettier@^3.0.0 typescript@^5.0.0
 Crie um arquivo `eslint.config.js` na raiz do seu projeto:
 
 ```javascript
-import brunoazevedoConfig from 'eslint-config-brunoazevedo';
+import { reactConfig } from 'eslint-config-brunoazevedo'
 
-export default brunoazevedoConfig;
+export default reactConfig
 ```
 
 ### Configuração Personalizada
 
 ```javascript
-import brunoazevedoConfig from 'eslint-config-brunoazevedo'
+import { reactConfig } from 'eslint-config-brunoazevedo'
 
 export default [
-  ...brunoazevedoConfig,
+  ...reactConfig,
   {
     rules: {
       // Suas regras personalizadas
@@ -56,10 +55,10 @@ export default [
 Você pode desabilitar regras específicas estendendo a configuração:
 
 ```javascript
-import brunoazevedoConfig from 'eslint-config-brunoazevedo'
+import { reactConfig } from 'eslint-config-brunoazevedo'
 
 export default [
-  ...brunoazevedoConfig,
+  ...reactConfig,
   {
     rules: {
       // Desabilitar regras específicas
@@ -78,10 +77,10 @@ export default [
 
 **Para projetos Next.js:**
 ```javascript
-import brunoazevedoConfig from 'eslint-config-brunoazevedo'
+import { reactConfig } from 'eslint-config-brunoazevedo'
 
 export default [
-  ...brunoazevedoConfig,
+  ...reactConfig,
   {
     rules: {
       // Ajustes específicos para Next.js
@@ -94,24 +93,31 @@ export default [
 
 **Para projetos Vite:**
 ```javascript
-import brunoazevedoConfig from 'eslint-config-brunoazevedo'
+import { reactConfig } from 'eslint-config-brunoazevedo'
 
 export default [
-  ...brunoazevedoConfig,
+  ...reactConfig,
   {
     ignores: ['dist/**', 'vite.config.ts'],
   },
 ]
 ```
-  },
+
+**Para arquivos de teste com regras customizadas:**
+```javascript
+import { reactConfig } from 'eslint-config-brunoazevedo'
+
+export default [
+  ...reactConfig,
   {
     // Configuração específica para arquivos de teste
-    files: ['**/*.test.{js,ts,jsx,tsx}'],
+    files: ['**/*.test.{js,ts,jsx,tsx}', '**/*.spec.{js,ts,jsx,tsx}'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
+      'react-hooks/rules-of-hooks': 'off',
     },
   },
-];
+]
 ```
 
 ## Scripts recomendados

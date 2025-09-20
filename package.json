@@ -55,7 +55,9 @@
   },
   "files": [
     "index.js",
-    "example.config.js",
-    "README.md"
+    "react-config.js",
+    "README.md",
+    "README.pt-BR.md",
+    "LICENSE"
   ]
 }

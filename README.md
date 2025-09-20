@@ -11,7 +11,6 @@ A modern ESLint v9 configuration for React projects with TypeScript, following c
 - **TypeScript** with strict rules
 - **Prettier** complete integration
 - **Accessibility** with jsx-a11y
-- **Zero legacy dependencies** - only official packages
 
 ## 📦 Installation
 
@@ -30,18 +29,18 @@ npm install --save-dev eslint@^9.0.0 prettier@^3.0.0 typescript@^5.0.0
 Create an `eslint.config.js` file in your project root:
 
 ```javascript
-import brunoazevedoConfig from 'eslint-config-brunoazevedo'
+import { reactConfig } from 'eslint-config-brunoazevedo'
 
-export default brunoazevedoConfig
+export default reactConfig
 ```
 
 ### Custom Configuration
 
 ```javascript
-import brunoazevedoConfig from 'eslint-config-brunoazevedo'
+import { reactConfig } from 'eslint-config-brunoazevedo'
 
 export default [
-  ...brunoazevedoConfig,
+  ...reactConfig,
   {
     rules: {
       // Your custom rules
@@ -56,10 +55,10 @@ export default [
 You can disable specific rules by extending the configuration:
 
 ```javascript
-import brunoazevedoConfig from 'eslint-config-brunoazevedo'
+import { reactConfig } from 'eslint-config-brunoazevedo'
 
 export default [
-  ...brunoazevedoConfig,
+  ...reactConfig,
   {
     rules: {
       // Disable specific rules
@@ -78,10 +77,10 @@ export default [
 
 **For Next.js projects:**
 ```javascript
-import brunoazevedoConfig from 'eslint-config-brunoazevedo'
+import { reactConfig } from 'eslint-config-brunoazevedo'
 
 export default [
-  ...brunoazevedoConfig,
+  ...reactConfig,
   {
     rules: {
       // Next.js specific adjustments
@@ -94,15 +93,31 @@ export default [
 
 **For Vite projects:**
 ```javascript
-import brunoazevedoConfig from 'eslint-config-brunoazevedo'
+import { reactConfig } from 'eslint-config-brunoazevedo'
 
 export default [
-  ...brunoazevedoConfig,
+  ...reactConfig,
   {
     ignores: ['dist/**', 'vite.config.ts'],
   },
 ]
 ```
+
+**For testing files with custom rules:**
+```javascript
+import { reactConfig } from 'eslint-config-brunoazevedo'
+
+export default [
+  ...reactConfig,
+  {
+    // Configuration for test files
+    files: ['**/*.test.{js,ts,jsx,tsx}', '**/*.spec.{js,ts,jsx,tsx}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      'react-hooks/rules-of-hooks': 'off',
+    },
+  },
+]
 
 ## 🧪 Testing
 
