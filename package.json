@@ -28,6 +28,7 @@
     "prettier",
     "jsx-a11y",
     "accessibility",
+    "git-flow",
     "react-hooks",
     "code-quality",
     "linting",
