@@ -2,15 +2,58 @@
 
 [🇧🇷 Portuguese](./README.pt-BR.md) | **🇺🇸 English**
 
-A modern ESLint v9 configuration for React projects with TypeScript, following clean code best practices and using only official packages.
+A modern ESLint v10 configuration for React projects with TypeScript, following clean code best practices and using only official packages.
 
 ## 🚀 Features
 
-- **ESLint v9** with flat config format
+- **ESLint v10** with flat config format
 - **React 18+** with hooks validation
 - **TypeScript** with strict rules
 - **Prettier** complete integration
 - **Accessibility** with jsx-a11y
+
+## ⚠️ Breaking Changes in v1.1.0
+
+This version upgrades to **ESLint v10** and raises the minimum Node.js version.
+
+### Requirements
+
+| Requirement | v1.0.x | v1.1.0 |
+|---|---|---|
+| Node.js | >= 18.0.0 | >= 20.19.0 |
+| ESLint | ^9.0.0 | ^10.0.0 |
+| TypeScript (optional) | ^5.0.0 | >= 5.0.0 |
+
+### New rules enforced
+
+Three new rules are now active via `eslint:recommended` (ESLint 10):
+
+- **`no-unassigned-vars`** — variables declared but never assigned
+- **`no-useless-assignment`** — assignments whose value is never read before being overwritten
+- **`preserve-caught-error`** — caught errors ignored when rethrowing a new exception
+
+These may introduce new errors in existing codebases. To disable any of them:
+
+```javascript
+import { reactConfig } from 'eslint-config-brunoazevedo'
+
+export default [
+  ...reactConfig,
+  {
+    rules: {
+      'no-unassigned-vars': 'off',
+      'no-useless-assignment': 'off',
+      'preserve-caught-error': 'off',
+    },
+  },
+]
+```
+
+### Migration
+
+1. Upgrade Node.js to v20.19.0 or higher
+2. Upgrade ESLint: `npm install -D eslint@^10.0.0`
+3. Run `npx eslint .` and fix any new errors from the three new rules
 
 ## 📦 Installation
 
@@ -130,7 +173,7 @@ export default [
 
 ### JavaScript/ES6+
 - Recommended @eslint/js rules
-- Modern ES2022+ configuration
+- Modern ES2025+ configuration
 - Import/export validation
 
 ### React

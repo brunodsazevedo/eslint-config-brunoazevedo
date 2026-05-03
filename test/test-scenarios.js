@@ -1,4 +1,5 @@
 import { ESLint } from 'eslint'
+import prettier from 'prettier'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import fs from 'fs/promises'
@@ -10,6 +11,7 @@ class ScenarioTester {
   constructor() {
     this.verbose = process.argv.includes('--verbose')
     this.scenarios = []
+    this.hasFailures = false
   }
 
   async run() {
@@ -22,6 +24,7 @@ class ScenarioTester {
     }
 
     await this.printSummary()
+    process.exit(this.hasFailures ? 1 : 0)
   }
 
   async createScenarios() {
@@ -35,6 +38,8 @@ class ScenarioTester {
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
+const fetchUsers = async (): Promise<User[]> => []
+
 interface User {
   id: number
   name: string
@@ -46,19 +51,18 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const loadUsers = async () => {
       try {
-        const response = await fetch('/api/users')
-        const userData = await response.json()
+        const userData = await fetchUsers()
         setUsers(userData)
-      } catch (error) {
-        console.error('Erro ao buscar usuários:', error)
+      } catch {
+        setUsers([])
       } finally {
         setLoading(false)
       }
     }
 
-    fetchUsers()
+    loadUsers()
   }, [])
 
   if (loading) {
@@ -83,6 +87,7 @@ export default function HomePage() {
 `,
         'app/layout.tsx': `
 import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
 
 export const metadata: Metadata = {
   title: 'Minha App',
@@ -90,7 +95,7 @@ export const metadata: Metadata = {
 }
 
 interface RootLayoutProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
@@ -163,7 +168,7 @@ export const UserCard = ({ user, onEdit, onDelete }: UserCardProps) => {
       name: 'React SPA com Custom Hooks',
       files: {
         'src/hooks/useApi.ts': `
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 
 interface ApiState<T> {
   data: T | null
@@ -181,7 +186,7 @@ export const useApi = <T>(
 ): ApiState<T> & { refetch: () => Promise<void> } => {
   const [state, setState] = useState<ApiState<T>>({
     data: null,
-    loading: false,
+    loading: options.immediate ?? false,
     error: null,
   })
 
@@ -189,7 +194,7 @@ export const useApi = <T>(
     setState(prev => ({ ...prev, loading: true, error: null }))
     
     try {
-      const response = await fetch(url)
+      const response = await globalThis.fetch(url)
       
       if (!response.ok) {
         throw new Error(\`HTTP error! status: \${response.status}\`)
@@ -205,12 +210,6 @@ export const useApi = <T>(
       })
     }
   }, [url])
-
-  useEffect(() => {
-    if (options.immediate) {
-      fetchData()
-    }
-  }, [fetchData, options.immediate])
 
   return {
     ...state,
@@ -364,20 +363,25 @@ export function complexFunction(data: BadInterface) {
 
       const eslint = new ESLint({
         overrideConfigFile: true,
-        overrideConfig: config.default,
+        overrideConfig: config.reactConfig,
       })
 
       for (const [filename, code] of Object.entries(scenario.files)) {
         const tempDir = join(
           __dirname,
-          '.tmp-scenarios',
+          'tmp-scenarios',
           scenario.name.replace(/\s+/g, '-'),
         )
         await fs.mkdir(tempDir, { recursive: true })
 
         const tempFile = join(tempDir, filename)
         await fs.mkdir(dirname(tempFile), { recursive: true })
-        await fs.writeFile(tempFile, code)
+        const fileCode = await this.prepareScenarioCode(
+          scenario.name,
+          filename,
+          code,
+        )
+        await fs.writeFile(tempFile, fileCode)
 
         const results = await eslint.lintFiles([tempFile])
         const result = results[0]
@@ -416,6 +420,7 @@ export function complexFunction(data: BadInterface) {
         totalWarnings,
       )
     } catch (error) {
+      this.hasFailures = true
       console.log(`❌ Erro ao testar cenário: ${error.message}`)
     }
 
@@ -429,15 +434,36 @@ export function complexFunction(data: BadInterface) {
       if (errors > 0) {
         console.log('✅ Cenário de problemas detectou erros como esperado')
       } else {
+        this.hasFailures = true
         console.log('❌ Cenário de problemas deveria ter detectado erros')
       }
     } else {
       if (errors === 0) {
         console.log('✅ Cenário válido passou sem erros')
       } else {
+        this.hasFailures = true
         console.log('⚠️  Cenário válido teve erros - revisar configuração')
       }
     }
+  }
+
+  async prepareScenarioCode(scenarioName, filename, code) {
+    const trimmedCode = code.trimStart()
+
+    if (scenarioName.includes('Problemas')) {
+      return trimmedCode
+    }
+
+    return await prettier.format(trimmedCode, {
+      filepath: filename,
+      printWidth: 80,
+      tabWidth: 2,
+      singleQuote: true,
+      trailingComma: 'all',
+      arrowParens: 'always',
+      semi: false,
+      endOfLine: 'auto',
+    })
   }
 
   async printSummary() {
@@ -456,7 +482,7 @@ export function complexFunction(data: BadInterface) {
 
     // Cleanup temporary files
     try {
-      await fs.rm(join(__dirname, '.tmp-scenarios'), { recursive: true, force: true })
+      await fs.rm(join(__dirname, 'tmp-scenarios'), { recursive: true, force: true })
     } catch (error) {
       // Ignore cleanup errors
     }

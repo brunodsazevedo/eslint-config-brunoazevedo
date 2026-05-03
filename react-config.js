@@ -1,4 +1,5 @@
 import js from '@eslint/js'
+import { fixupPluginRules } from '@eslint/compat'
 import typescript from '@typescript-eslint/eslint-plugin'
 import typescriptParser from '@typescript-eslint/parser'
 import react from 'eslint-plugin-react'
@@ -79,7 +80,7 @@ export default [
       },
     },
     plugins: {
-      react,
+      react: fixupPluginRules(react),
       'react-hooks': reactHooks,
       'react-hooks-extra': reactHooksExtra,
       'jsx-a11y': jsxA11y,
@@ -104,9 +105,7 @@ export default [
       // React Hooks rules (oficial + extra)
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      'react-hooks-extra/no-unnecessary-use-callback': 'warn',
-      'react-hooks-extra/no-unnecessary-use-memo': 'warn',
-      'react-hooks-extra/prefer-use-state-lazy-initialization': 'warn',
+      'react-hooks-extra/no-direct-set-state-in-use-effect': 'warn',
 
       // JSX A11y customizations
       'jsx-a11y/alt-text': [

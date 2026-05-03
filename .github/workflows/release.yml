@@ -35,7 +35,7 @@ on:
           - develop
 
 env:
-  NODE_VERSION: '18'
+  NODE_VERSION: '20'
 
 jobs:
   # CI - Sempre executa para validar código
