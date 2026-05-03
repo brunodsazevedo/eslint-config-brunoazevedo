@@ -5,6 +5,7 @@ import { TypeScriptTest } from './unit/typescript.test.js'
 import { PrettierTest } from './unit/prettier.test.js'
 import { AccessibilityTest } from './unit/accessibility.test.js'
 import { IgnorePatternsTest } from './unit/ignore-patterns.test.js'
+import { JavaScriptRulesTest } from './unit/javascript-rules.test.js'
 
 class TestRunner {
   constructor() {
@@ -17,6 +18,7 @@ class TestRunner {
     try {
       const tests = [
         new ConfigurationTest(this.reporter),
+        new JavaScriptRulesTest(this.reporter),
         new ReactTest(this.reporter),
         new TypeScriptTest(this.reporter),
         new PrettierTest(this.reporter),
